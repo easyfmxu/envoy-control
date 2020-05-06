@@ -64,7 +64,7 @@ internal class EnvoySnapshotFactory(
 
         val endpoints: List<ClusterLoadAssignment> = createLoadAssignment(
             clusters = clusterConfigurations.keys,
-            localityAwareServicesStates = servicesStates
+            multiClusterState = servicesStates
         )
 
         val snapshot = globalSnapshot(
@@ -327,12 +327,12 @@ internal class EnvoySnapshotFactory(
 
     private fun createLoadAssignment(
         clusters: Set<String>,
-        localityAwareServicesStates: MultiClusterState
+        multiClusterState: MultiClusterState
     ): List<ClusterLoadAssignment> {
 
         return clusters
             .map { serviceName ->
-                val localityLbEndpoints = localityAwareServicesStates
+                val localityLbEndpoints = multiClusterState
                     .mapNotNull {
                         val locality = it.locality
                         val zone = it.zone
